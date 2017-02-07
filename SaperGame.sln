@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saper", "Saper\Saper.csproj", "{FF7AD1C8-C7A0-4B94-B4D0-2F72A71A8BA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaperLibrary", "SaperLibrary\SaperLibrary.csproj", "{27B80B11-F2C8-47B0-99F9-614F8A86409B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF7AD1C8-C7A0-4B94-B4D0-2F72A71A8BA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF7AD1C8-C7A0-4B94-B4D0-2F72A71A8BA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF7AD1C8-C7A0-4B94-B4D0-2F72A71A8BA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF7AD1C8-C7A0-4B94-B4D0-2F72A71A8BA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27B80B11-F2C8-47B0-99F9-614F8A86409B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27B80B11-F2C8-47B0-99F9-614F8A86409B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27B80B11-F2C8-47B0-99F9-614F8A86409B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27B80B11-F2C8-47B0-99F9-614F8A86409B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
