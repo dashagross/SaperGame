@@ -55,7 +55,8 @@
 
         </Grid>
 
-        <Image Source="{Binding writeableBmp}" Stretch="None"/>
+        <Image Source="{Binding FieldImage}" Stretch="None"
+               MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
 
     </StackPanel>
 

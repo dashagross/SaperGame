@@ -30,6 +30,8 @@ namespace SaperLibrary
 
         public bool ContainsBomb { get; set; }
 
+        public bool IsOpen { get; set; }
+
         public override string ToString()
         {
             return ContainsBomb ? "X" : BombsInNeighbourhood.ToString();

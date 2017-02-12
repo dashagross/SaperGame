@@ -10,8 +10,10 @@ namespace SaperLibrary
     {
 
         public Cell[,] Cells { get { return m_cells.DeepCopy(); } }
+        public int Width  { get { return m_cells.GetLength(0); } }
+        public int Height { get { return m_cells.GetLength(1); } }
 
-        Cell[,] m_cells { get; }
+        Cell[,] m_cells;
 
         public BombField(int cols, int rows)
         {
@@ -24,6 +26,11 @@ namespace SaperLibrary
                     m_cells[i, j] = new Cell();
                 }
             }
+        }
+
+        public void OpenCell(int x, int y)
+        {
+            m_cells[x, y].IsOpen = true;
         }
 
         public void PlaceBombs(int count)

@@ -1,78 +1,93 @@
 ﻿using SaperLibrary;
+
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Saper
 {
-    public class ViewModel
+    public class ViewModel : INotifyPropertyChanged
     {
         public BombField Field { get; }
-        public WriteableBitmap writeableBmp { get; }
-        static readonly Size c_CellSize = new Size(24, 24);
+        public WriteableBitmap FieldImage { get; }
+
+        bool m_suppressNotifications;
 
         public ViewModel(int cols, int rows, int bombs)
         {
             Field = new BombField(cols, rows);
             Field.PlaceBombs(bombs);
 
-            writeableBmp = BitmapFactory.New((int)(cols * c_CellSize.Width), (int)(rows * c_CellSize.Height));
-            using (var ctx = writeableBmp.GetBitmapContext())
-            {
-                for (int i = 0; i < cols; i++)
-                    for (int j = 0; j < rows; j++)
-                    {
-                        if (Field.Cells[i, j].ContainsBomb)
-                            blitSprite(i, j, CellContentsEnum.Bomb);
-                        else
-                            switch (Field.Cells[i, j].BombsInNeighbourhood)
-                            {
-                                case 0:
-                                    blitSprite(i, j, CellContentsEnum.Empty);
-                                    break;
-                                case 1:
-                                    blitSprite(i, j, CellContentsEnum.One);
-                                    break;
-                                case 2:
-                                    blitSprite(i, j, CellContentsEnum.Two);
-                                    break;
-                                case 3:
-                                    blitSprite(i, j, CellContentsEnum.Three);
-                                    break;
-                                case 4:
-                                    blitSprite(i, j, CellContentsEnum.Four);
-                                    break;
-                                case 5:
-                                    blitSprite(i, j, CellContentsEnum.Five);
-                                    break;
-                                case 6:
-                                    blitSprite(i, j, CellContentsEnum.Six);
-                                    break;
-                                case 7:
-                                    blitSprite(i, j, CellContentsEnum.Seven);
-                                    break;
-                                case 8:
-                                    blitSprite(i, j, CellContentsEnum.Eight);
-                                    break;
-                            }
-                    }
-            }
+            FieldImage = BitmapFactory.New((int)(cols * CellSize.Width), (int)(rows * CellSize.Height));
+
+            drawAllCells();
+        }
+
+        public void OpenCell(int x, int y)
+        {
+            Field.OpenCell(x, y);
+            DrawCell(x, y);
         }
 
         void blitSprite(int i, int j, CellContentsEnum e)
         {
-            var writeableBmpImage = BitmapFactory.New(0, 0).FromResource("Images\\CellSprites.png");
-
-            writeableBmp.Blit(new Point(i * c_CellSize.Width, j * c_CellSize.Height),
-                                              writeableBmpImage,
-                                              new Rect(imagesDictionary[e].X, imagesDictionary[e].Y,
-                                                       c_CellSize.Width, c_CellSize.Height),
-                                              Colors.White, WriteableBitmapExtensions.BlendMode.None);
+            FieldImage.Blit(new Point(i * CellSize.Width, j * CellSize.Height),
+                              m_skinBitmap,
+                              new Rect(m_imagesDictionary[e], CellSize),
+                              Colors.White, WriteableBitmapExtensions.BlendMode.None);
         }
 
-        #region imagesDictionary
-        Dictionary<CellContentsEnum, Point> imagesDictionary = new Dictionary<CellContentsEnum, Point>()
+        void drawAllCells()
+        {
+            m_suppressNotifications = true;
+
+            for (int i = 0; i < Field.Width; i++)
+                for (int j = 0; j < Field.Height; j++)
+                    DrawCell(i, j);
+
+            m_suppressNotifications = false;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FieldImage"));
+        }
+
+        public void DrawCell(int x, int y)
+        {
+            CellContentsEnum e;
+
+            if (!Field.Cells[x, y].IsOpen)
+                e = CellContentsEnum.Closed;
+            else if (Field.Cells[x, y].ContainsBomb)
+                e = CellContentsEnum.Bomb;
+            else
+                switch (Field.Cells[x, y].BombsInNeighbourhood)
+                {
+                    case 0: e = CellContentsEnum.Empty; break;
+                    case 1: e = CellContentsEnum.One;   break;
+                    case 2: e = CellContentsEnum.Two;   break;
+                    case 3: e = CellContentsEnum.Three; break;
+                    case 4: e = CellContentsEnum.Four;  break;
+                    case 5: e = CellContentsEnum.Five;  break;
+                    case 6: e = CellContentsEnum.Six;   break;
+                    case 7: e = CellContentsEnum.Seven; break;
+                    case 8: e = CellContentsEnum.Eight; break;
+                    default:
+                        throw new InvalidOperationException("Value of a cell is out of range (from 0 to 8)");
+                }
+            blitSprite(x, y, e);
+
+            if (!m_suppressNotifications)
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FieldImage"));
+        }
+
+        #region Skin
+
+        public Size CellSize { get; } = new Size(24, 24);
+        WriteableBitmap m_skinBitmap = BitmapFactory.New(0, 0).FromResource("Images\\CellSprites.png");
+
+        Dictionary<CellContentsEnum, Point> m_imagesDictionary = new Dictionary<CellContentsEnum, Point>()
         {
             { CellContentsEnum.Closed, new Point(0, 0)  },
             { CellContentsEnum.Flag,   new Point(24, 0) },
@@ -88,7 +103,10 @@ namespace Saper
             { CellContentsEnum.Seven, new Point(24, 48) },
             { CellContentsEnum.Eight, new Point(48, 48) },
         };
+
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
 
