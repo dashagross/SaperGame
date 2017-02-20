@@ -23,5 +23,13 @@ namespace Saper
             int y = (int)(clickPoint.Y / ViewModel.CellSize.Height);
             ViewModel.OpenCell(x, y);
         }
+
+        private void Image_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var clickPoint = e.GetPosition((IInputElement)sender);
+            int x = (int)(clickPoint.X / ViewModel.CellSize.Width);
+            int y = (int)(clickPoint.Y / ViewModel.CellSize.Height);
+            ViewModel.FlagCell(x, y);
+        }
     }
 }

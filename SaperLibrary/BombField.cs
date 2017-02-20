@@ -8,17 +8,21 @@ namespace SaperLibrary
 {
     public class BombField
     {
+        #region Cell access
 
-        public Cell[,] Cells { get { return m_cells.DeepCopy(); } }
-        public int Width  { get { return m_cells.GetLength(0); } }
+        public int Width { get { return m_cells.GetLength(0); } }
         public int Height { get { return m_cells.GetLength(1); } }
+
+        public Cell this[int col, int row] { get { return m_cells[col, row]; } }
+
+        #endregion
 
         Cell[,] m_cells;
 
         public BombField(int cols, int rows)
         {
             m_cells = new Cell[cols, rows];
-                        
+
             for (int i = 0; i < cols; i++)
             {
                 for (int j = 0; j < rows; j++)
@@ -33,6 +37,11 @@ namespace SaperLibrary
             m_cells[x, y].IsOpen = true;
         }
 
+        public void FlagCell(int x, int y)
+        {
+            m_cells[x, y].IsFlagged = true;
+        }
+
         public void PlaceBombs(int count)
         {
             var bombArray = new int[count];
@@ -41,7 +50,7 @@ namespace SaperLibrary
             for (int k = 0; k < count; k++)
             {
                 bombArray[k] = r.Next(m_cells.Length);
-                
+
                 if (bombArray.Take(k).Contains(bombArray[k]))
                     --k;
                 else

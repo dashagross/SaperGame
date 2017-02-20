@@ -16,7 +16,7 @@ namespace SaperLibrary
 
                 return m_bombsInNeighbourhood;
             }
-            set
+            internal set
             {
                 if (ContainsBomb)
                     throw new InvalidOperationException();
@@ -28,9 +28,11 @@ namespace SaperLibrary
             }
         }
 
-        public bool ContainsBomb { get; set; }
+        public bool ContainsBomb { get; internal set; }
 
-        public bool IsOpen { get; set; }
+        public bool IsOpen { get; internal set; }
+
+        public bool IsFlagged { get; internal set; }
 
         public override string ToString()
         {

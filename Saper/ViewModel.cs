@@ -32,9 +32,15 @@ namespace Saper
             DrawCell(x, y);
         }
 
-        void blitSprite(int i, int j, CellContentsEnum e)
+        public void FlagCell(int x, int y)
         {
-            FieldImage.Blit(new Point(i * CellSize.Width, j * CellSize.Height),
+            Field.FlagCell(x, y);
+            DrawCell(x, y);
+        }
+
+        void blitSprite(int x, int y, CellContentsEnum e)
+        {
+            FieldImage.Blit(new Point(x * CellSize.Width, y * CellSize.Height),
                               m_skinBitmap,
                               new Rect(m_imagesDictionary[e], CellSize),
                               Colors.White, WriteableBitmapExtensions.BlendMode.None);
@@ -55,14 +61,19 @@ namespace Saper
 
         public void DrawCell(int x, int y)
         {
+            var cell = Field[x, y];
             CellContentsEnum e;
 
-            if (!Field.Cells[x, y].IsOpen)
-                e = CellContentsEnum.Closed;
-            else if (Field.Cells[x, y].ContainsBomb)
+            if (!cell.IsOpen)
+            {
+                if (cell.IsFlagged)
+                    e = CellContentsEnum.Flag;
+                else e = CellContentsEnum.Closed;
+            }
+            else if (cell.ContainsBomb)
                 e = CellContentsEnum.Bomb;
             else
-                switch (Field.Cells[x, y].BombsInNeighbourhood)
+                switch (cell.BombsInNeighbourhood)
                 {
                     case 0: e = CellContentsEnum.Empty; break;
                     case 1: e = CellContentsEnum.One;   break;

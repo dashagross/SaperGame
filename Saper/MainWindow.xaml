@@ -56,7 +56,8 @@
         </Grid>
 
         <Image Source="{Binding FieldImage}" Stretch="None"
-               MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
+               MouseLeftButtonDown="Image_MouseLeftButtonDown"
+               MouseRightButtonDown="Image_MouseRightButtonDown"/>
 
     </StackPanel>
 
