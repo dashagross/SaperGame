@@ -30,9 +30,9 @@ namespace SaperLibrary
 
         public bool ContainsBomb { get; internal set; }
 
-        public bool IsOpen { get; internal set; }
+        public bool IsOpen { get; set; }
 
-        public bool IsFlagged { get; internal set; }
+        public bool IsFlagged { get; set; }
 
         public override string ToString()
         {

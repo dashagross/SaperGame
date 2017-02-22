@@ -32,16 +32,6 @@ namespace SaperLibrary
             }
         }
 
-        public void OpenCell(int x, int y)
-        {
-            m_cells[x, y].IsOpen = true;
-        }
-
-        public void FlagCell(int x, int y)
-        {
-            m_cells[x, y].IsFlagged = true;
-        }
-
         public void PlaceBombs(int count)
         {
             var bombArray = new int[count];
@@ -63,7 +53,6 @@ namespace SaperLibrary
 
         void CountCell(int min_i, int max_i, int min_j, int max_j)
         {
-
             for (int a = Math.Min(min_i, max_i); a <= Math.Max(min_i, max_i); a++)
                 for (int b = Math.Min(min_j, max_j); b <= Math.Max(min_j, max_j); b++)
                     if (!m_cells[a, b].ContainsBomb) ++m_cells[a, b].BombsInNeighbourhood;

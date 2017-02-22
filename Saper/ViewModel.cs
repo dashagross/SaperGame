@@ -28,13 +28,63 @@ namespace Saper
 
         public void OpenCell(int x, int y)
         {
-            Field.OpenCell(x, y);
+
+            Field[x, y].IsOpen = true;
             DrawCell(x, y);
+
+        }
+
+        public void OpenCellsNearEmpty(int x, int y)
+        {
+            if (!Field[x, y].ContainsBomb && Field[x, y].BombsInNeighbourhood == 0)
+            {
+                bool isLastLine = (y == Field.Height - 1);
+                if (x == 0)
+                {
+                    if (y == 0)
+                        drawAroundEmtyCell(0, 1, 0, 1); // left top corner
+                    else if (isLastLine)
+                        drawAroundEmtyCell(0, 1, y - 1, y); // left down corner
+                    else
+                        drawAroundEmtyCell(0, 1, y - 1, y + 1); // left wall
+                }
+                else if (x == Field.Width - 1)
+                {
+                    if (y == 0)
+                        drawAroundEmtyCell(x - 1, x, 0, 1); // right top corner
+                    else if (isLastLine)
+                        drawAroundEmtyCell(x - 1, x, y - 1, y); // right down corner
+                    else
+                        drawAroundEmtyCell(x - 1, x, y - 1, y + 1); // right wall
+                }
+                else
+                {
+                    if (y == 0)
+                        drawAroundEmtyCell(x - 1, x + 1, 0, 1); // top wall
+                    else if (isLastLine)
+                        drawAroundEmtyCell(x - 1, x + 1, y - 1, y); // down wall
+                    else
+                        drawAroundEmtyCell(x - 1, x + 1, y - 1, y + 1); // center
+                }
+            }
+        }
+
+        void drawAroundEmtyCell(int min_x, int max_x, int min_y, int max_y)
+        {
+            for (int x = min_x; x <= max_x; ++x)
+                for (int y = min_y; y <= max_y; ++y)
+                {
+                    if (!Field[x, y].IsOpen)
+                    {
+                        OpenCell(x, y);
+                        OpenCellsNearEmpty(x, y);
+                    }
+                }
         }
 
         public void FlagCell(int x, int y)
         {
-            Field.FlagCell(x, y);
+            Field[x, y].IsFlagged = !Field[x, y].IsFlagged;
             DrawCell(x, y);
         }
 
@@ -68,7 +118,8 @@ namespace Saper
             {
                 if (cell.IsFlagged)
                     e = CellContentsEnum.Flag;
-                else e = CellContentsEnum.Closed;
+                else
+                    e = CellContentsEnum.Closed;
             }
             else if (cell.ContainsBomb)
                 e = CellContentsEnum.Bomb;

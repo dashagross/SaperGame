@@ -2,6 +2,7 @@
 
 using SaperLibrary;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace Saper
 {
@@ -16,20 +17,32 @@ namespace Saper
             InitializeComponent();
         }
 
-        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var clickPoint = e.GetPosition((IInputElement)sender);
             int x = (int)(clickPoint.X / ViewModel.CellSize.Width);
             int y = (int)(clickPoint.Y / ViewModel.CellSize.Height);
-            ViewModel.OpenCell(x, y);
-        }
 
-        private void Image_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var clickPoint = e.GetPosition((IInputElement)sender);
-            int x = (int)(clickPoint.X / ViewModel.CellSize.Width);
-            int y = (int)(clickPoint.Y / ViewModel.CellSize.Height);
-            ViewModel.FlagCell(x, y);
+            switch (e.ChangedButton)
+            {
+                case MouseButton.Left:
+                    if (!ViewModel.Field[x, y].IsFlagged)
+                    {
+                        ViewModel.OpenCell(x, y);
+                        ViewModel.OpenCellsNearEmpty(x, y);
+                    }
+                    break;
+
+                case MouseButton.Right:
+                    ViewModel.FlagCell(x, y);
+                    break;
+
+                case MouseButton.Middle:
+
+                default:
+                    break;
+            }
+
         }
     }
 }
