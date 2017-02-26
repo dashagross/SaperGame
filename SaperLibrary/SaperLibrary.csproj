@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Cell.cs" />
     <Compile Include="BombField.cs" />
+    <Compile Include="CellChangedEventArgs.cs" />
     <Compile Include="CellContentsEnum.cs" />
     <Compile Include="DeepCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

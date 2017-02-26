@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using cellAreaTuple = System.Tuple<int, int, int, int>;
 
 namespace SaperLibrary
 {
-    public delegate void NeighbourhoodAction(int min_x, int max_x, int min_y, int max_y);
+    public delegate void NeighbourhoodAction(int x, int y);
 
     public class BombField
     {
@@ -53,11 +53,9 @@ namespace SaperLibrary
 
         }
 
-        void countCell(int min_i, int max_i, int min_j, int max_j)
+        void countCell(int x, int y)
         {
-            for (int a = Math.Min(min_i, max_i); a <= Math.Max(min_i, max_i); a++)
-                for (int b = Math.Min(min_j, max_j); b <= Math.Max(min_j, max_j); b++)
-                    if (!m_cells[a, b].ContainsBomb) ++m_cells[a, b].BombsInNeighbourhood;
+            if (!m_cells[x, y].ContainsBomb) ++m_cells[x, y].BombsInNeighbourhood;
         }
 
         void FillCell(int i, int j)
@@ -82,33 +80,39 @@ namespace SaperLibrary
         {
             bool isLastLine = (j == m_cells.GetLength(1) - 1);
 
+            cellAreaTuple cellArea;
+            
             if (i == 0)
             {
                 if (j == 0)
-                    callback(0, 1, 0, 1);         // left top corner
-                else if (isLastLine)              
-                    callback(0, 1, j - 1, j);     // left down corner
+                    cellArea = new cellAreaTuple(0, 1, 0, 1);         // left top corner
+                else if (isLastLine)
+                    cellArea = new cellAreaTuple(0, 1, j - 1, j);     // left down corner
                 else
-                    callback(0, 1, j - 1, j + 1); // left wall
+                    cellArea = new cellAreaTuple(0, 1, j - 1, j + 1); // left wall
             }
             else if (i == m_cells.GetLength(0) - 1)
             {
                 if (j == 0)
-                    callback(i - 1, i, 0, 1);         // right top corner
-                else if (isLastLine)                  
-                    callback(i - 1, i, j - 1, j);     // right down corner
+                    cellArea = new cellAreaTuple(i - 1, i, 0, 1);         // right top corner
+                else if (isLastLine)
+                    cellArea = new cellAreaTuple(i - 1, i, j - 1, j);     // right down corner
                 else
-                    callback(i - 1, i, j - 1, j + 1); // right wall
+                    cellArea = new cellAreaTuple(i - 1, i, j - 1, j + 1); // right wall
             }
             else
             {
                 if (j == 0)
-                    callback(i - 1, i + 1, 0, 1);         // top wall
-                else if (isLastLine)                      
-                    callback(i - 1, i + 1, j - 1, j);     // down wall
+                    cellArea = new cellAreaTuple(i - 1, i + 1, 0, 1);         // top wall
+                else if (isLastLine)
+                    cellArea = new cellAreaTuple(i - 1, i + 1, j - 1, j);     // down wall
                 else
-                    callback(i - 1, i + 1, j - 1, j + 1); // center
+                    cellArea = new cellAreaTuple(i - 1, i + 1, j - 1, j + 1); // center
             }
+
+            for (int x = cellArea.Item1; x <= cellArea.Item2; ++x)
+                for (int y = cellArea.Item3; y <= cellArea.Item4; ++y)
+                    callback(x, y);
         }
 
         public override string ToString()

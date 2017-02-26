@@ -1,8 +1,6 @@
 ﻿using System.Windows;
 
-using SaperLibrary;
 using System.Windows.Input;
-using System.Windows.Controls;
 
 namespace Saper
 {
@@ -23,25 +21,23 @@ namespace Saper
             int x = (int)(clickPoint.X / ViewModel.CellSize.Width);
             int y = (int)(clickPoint.Y / ViewModel.CellSize.Height);
 
-           /* switch (e.ChangedButton)
+            switch (e.ChangedButton)
             {
                 case MouseButton.Left:
-                    if (!ViewModel.Field[x, y].IsFlagged)
-                    {
-                        ViewModel.OpenCell(x, y);
-                        ViewModel.OpenCellsNearEmpty(x, y);
-                    }
+                    ViewModel.Rules.OpenCell(x, y);                    
                     break;
 
                 case MouseButton.Right:
-                    ViewModel.FlagCell(x, y);
+                    ViewModel.Rules.ToggleFlag(x, y);
                     break;
 
                 case MouseButton.Middle:
+                    ViewModel.Rules.OpenCellArea(x, y);
+                    break;
 
                 default:
                     break;
-            }*/
+            }
 
         }
     }

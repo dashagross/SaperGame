@@ -27,6 +27,7 @@ namespace Saper
             FieldImage = BitmapFactory.New((int)(cols * CellSize.Width), (int)(rows * CellSize.Height));
 
             Rules = new Rules(Field);
+            Rules.CellChanged += Rules_CellChanged;
             
             drawAllCells();
         }
@@ -112,6 +113,11 @@ namespace Saper
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void Rules_CellChanged(object sender, CellChangedEventArgs arg)
+        {
+            DrawCell(arg.x, arg.y);
+        }
     }
 }
 

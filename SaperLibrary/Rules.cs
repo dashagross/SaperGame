@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SaperLibrary
 {
+    public delegate void CellChangedEventHandler(object sender, CellChangedEventArgs arg);
+
     public class Rules
     {
         BombField m_field;
@@ -17,48 +16,66 @@ namespace SaperLibrary
 
         public void OpenCell(int x, int y)
         {
-            if (m_field[x,y].IsFlagged)
-            {
-                openCellImpl(x, y);
-                openCellsNearEmpty(x, y);
-            }
+            openCellImpl(x, y);
+            openSafeZone(x, y);
         }
 
         public void ToggleFlag(int x, int y)
         {
             m_field[x, y].IsFlagged = !m_field[x, y].IsFlagged;
+            raiseCellChanged(x, y);
         }
 
-        public void OpenCellArea()
+        public void OpenCellArea(int x, int y)
         {
-
+            if (m_field[x, y].IsOpen)
+            {
+                count = 0;
+                m_field.PerformWithNeighbourhood(countFlags, x, y);
+                if (count >= m_field[x, y].BombsInNeighbourhood)
+                    m_field.PerformWithNeighbourhood(OpenCell, x, y);
+            }
         }
-
 
         void openCellImpl(int x, int y)
         {
-            m_field[x, y].IsOpen = true;
+            if (!m_field[x, y].IsFlagged)
+            {
+                m_field[x, y].IsOpen = true;
+                raiseCellChanged(x, y);
+            }
         }
 
-        void openCellsNearEmpty(int x, int y)
+        void openSafeZone(int x, int y)
         {
             if (!m_field[x, y].ContainsBomb && m_field[x, y].BombsInNeighbourhood == 0)
-                m_field.PerformWithNeighbourhood(drawAroundEmptyCell, x, y);
+                m_field.PerformWithNeighbourhood(openSafeZoneImpl, x, y);
         }
 
-        void drawAroundEmptyCell(int min_x, int max_x, int min_y, int max_y)
+        void openSafeZoneImpl(int x, int y)
         {
-            for (int x = min_x; x <= max_x; ++x)
-                for (int y = min_y; y <= max_y; ++y)
-                {
-                    if (!m_field[x, y].IsOpen)
-                    {
-                        openCellImpl(x, y);
-                        openCellsNearEmpty(x, y);
-                    }
-                }
+            if (!m_field[x, y].IsOpen && !m_field[x, y].IsFlagged)
+            {
+                openCellImpl(x, y);
+                openSafeZone(x, y);
+            }
         }
 
+        int count { get; set; }
+        void countFlags(int x, int y)
+        {
+            if (m_field[x, y].IsFlagged)
+                count++;
+        }
 
+        public event CellChangedEventHandler CellChanged;
+
+        protected void raiseCellChanged(int x, int y)
+        {
+            CellChangedEventArgs arg = new CellChangedEventArgs();
+            arg.x = x;
+            arg.y = y;
+            CellChanged?.Invoke(this, arg);
+        }
     }
 }
