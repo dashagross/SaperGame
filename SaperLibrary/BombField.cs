@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace SaperLibrary
 {
+    public delegate void NeighbourhoodAction(int min_x, int max_x, int min_y, int max_y);
+
     public class BombField
     {
         #region Cell access
@@ -51,7 +53,7 @@ namespace SaperLibrary
 
         }
 
-        void CountCell(int min_i, int max_i, int min_j, int max_j)
+        void countCell(int min_i, int max_i, int min_j, int max_j)
         {
             for (int a = Math.Min(min_i, max_i); a <= Math.Max(min_i, max_i); a++)
                 for (int b = Math.Min(min_j, max_j); b <= Math.Max(min_j, max_j); b++)
@@ -61,38 +63,7 @@ namespace SaperLibrary
         void FillCell(int i, int j)
         {
             if (m_cells[i, j].ContainsBomb)
-            {
-                bool isLastLine = (j == m_cells.GetLength(1) - 1);
-
-                if (i == 0)
-                {
-                    if (j == 0)
-                        CountCell(0, 1, 0, 1); // left top corner
-                    else if (isLastLine)
-                        CountCell(0, 1, j - 1, j); // left down corner
-                    else
-                        CountCell(0, 1, j - 1, j + 1); // left wall
-                }
-                else if (i == m_cells.GetLength(0) - 1)
-                {
-                    if (j == 0)
-                        CountCell(i - 1, i, 0, 1); // right top corner
-                    else if (isLastLine)
-                        CountCell(i - 1, i, j - 1, j); // right down corner
-                    else
-                        CountCell(i - 1, i, j - 1, j + 1); // right wall
-                }
-                else
-                {
-                    if (j == 0)
-                        CountCell(i - 1, i + 1, 0, 1); // top wall
-                    else if (isLastLine)
-                        CountCell(i - 1, i + 1, j - 1, j); // down wall
-                    else
-                        CountCell(i - 1, i + 1, j - 1, j + 1); // center
-                }
-            }
-
+                PerformWithNeighbourhood(countCell, i, j);
         }
 
         void Fill()
@@ -104,6 +75,39 @@ namespace SaperLibrary
                     FillCell(i, j);
                 }
 
+            }
+        }
+
+        public void PerformWithNeighbourhood(NeighbourhoodAction callback, int i, int j)
+        {
+            bool isLastLine = (j == m_cells.GetLength(1) - 1);
+
+            if (i == 0)
+            {
+                if (j == 0)
+                    callback(0, 1, 0, 1);         // left top corner
+                else if (isLastLine)              
+                    callback(0, 1, j - 1, j);     // left down corner
+                else
+                    callback(0, 1, j - 1, j + 1); // left wall
+            }
+            else if (i == m_cells.GetLength(0) - 1)
+            {
+                if (j == 0)
+                    callback(i - 1, i, 0, 1);         // right top corner
+                else if (isLastLine)                  
+                    callback(i - 1, i, j - 1, j);     // right down corner
+                else
+                    callback(i - 1, i, j - 1, j + 1); // right wall
+            }
+            else
+            {
+                if (j == 0)
+                    callback(i - 1, i + 1, 0, 1);         // top wall
+                else if (isLastLine)                      
+                    callback(i - 1, i + 1, j - 1, j);     // down wall
+                else
+                    callback(i - 1, i + 1, j - 1, j + 1); // center
             }
         }
 

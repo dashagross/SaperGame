@@ -23,7 +23,7 @@ namespace Saper
             int x = (int)(clickPoint.X / ViewModel.CellSize.Width);
             int y = (int)(clickPoint.Y / ViewModel.CellSize.Height);
 
-            switch (e.ChangedButton)
+           /* switch (e.ChangedButton)
             {
                 case MouseButton.Left:
                     if (!ViewModel.Field[x, y].IsFlagged)
@@ -41,7 +41,7 @@ namespace Saper
 
                 default:
                     break;
-            }
+            }*/
 
         }
     }
