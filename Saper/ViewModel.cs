@@ -82,6 +82,7 @@ namespace Saper
                     default:
                         throw new InvalidOperationException("Value of a cell is out of range (from 0 to 8)");
                 }
+
             blitSprite(x, y, e);
 
             if (!m_suppressNotifications)

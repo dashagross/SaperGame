@@ -10,7 +10,7 @@ namespace Saper
 
         public MainWindow()
         {
-            ViewModel = new ViewModel(30, 16, 99); //(cols, rows, bombs)
+            ViewModel = new ViewModel(30, 16, 99); // (cols, rows, bombs)
 
             InitializeComponent();
         }

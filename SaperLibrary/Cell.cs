@@ -6,7 +6,6 @@ namespace SaperLibrary
     public class Cell
     {
         private int m_bombsInNeighbourhood;
-
         public int BombsInNeighbourhood
         {
             get

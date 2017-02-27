@@ -3,7 +3,7 @@
 
 namespace SaperLibrary
 {
-    public delegate void CellChangedEventHandler(object sender, CellChangedEventArgs arg);
+    //public delegate void CellChangedEventHandler(object sender, CellChangedEventArgs arg);
 
     public class Rules
     {
@@ -30,8 +30,8 @@ namespace SaperLibrary
         {
             if (m_field[x, y].IsOpen)
             {
-                count = 0;
-                m_field.PerformWithNeighbourhood(countFlags, x, y);
+                int count = 0;
+                m_field.PerformWithNeighbourhood((u, v) => { if (m_field[u, v].IsFlagged) ++count; }, x, y);
                 if (count >= m_field[x, y].BombsInNeighbourhood)
                     m_field.PerformWithNeighbourhood(OpenCell, x, y);
             }
@@ -61,21 +61,11 @@ namespace SaperLibrary
             }
         }
 
-        int count { get; set; }
-        void countFlags(int x, int y)
-        {
-            if (m_field[x, y].IsFlagged)
-                count++;
-        }
-
-        public event CellChangedEventHandler CellChanged;
+        public event EventHandler<CellChangedEventArgs> CellChanged;
 
         protected void raiseCellChanged(int x, int y)
         {
-            CellChangedEventArgs arg = new CellChangedEventArgs();
-            arg.x = x;
-            arg.y = y;
-            CellChanged?.Invoke(this, arg);
+            CellChanged?.Invoke(this, new CellChangedEventArgs(x, y));
         }
     }
 }
