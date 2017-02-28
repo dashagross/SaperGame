@@ -14,6 +14,12 @@ namespace SaperLibrary
             m_field = field;
         }
 
+        public void Start(int bombs)
+        {
+            m_field.PlaceBombs(bombs);
+            raiseGameStarted();
+        }
+
         public void OpenCell(int x, int y)
         {
             openCellImpl(x, y);
@@ -83,6 +89,13 @@ namespace SaperLibrary
         protected void raiseCellChanged(int x, int y)
         {
             CellChanged?.Invoke(this, new CellChangedEventArgs(x, y));
+        }
+
+        public event EventHandler GameStarted;
+
+        protected void raiseGameStarted()
+        {
+            GameStarted?.Invoke(this, null);
         }
     }
 }

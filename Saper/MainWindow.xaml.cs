@@ -10,7 +10,7 @@ namespace Saper
 
         public MainWindow()
         {
-            ViewModel = new ViewModel(30, 16, 99); // (cols, rows, bombs)
+            ViewModel = new ViewModel(); 
 
             InitializeComponent();
         }
@@ -39,6 +39,16 @@ namespace Saper
                     break;
             }
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Rules.Start(ViewModel.Bombs);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Rules.Start(ViewModel.Bombs);
         }
     }
 }

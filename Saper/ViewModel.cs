@@ -11,6 +11,11 @@ namespace Saper
 {
     public class ViewModel : INotifyPropertyChanged
     {
+
+        public int Cols { get; set; } = 30;
+        public int Rows { get; set; } = 16;
+        public int Bombs { get; set; } = 99;
+
         public BombField Field { get; }
 
         public WriteableBitmap FieldImage { get; }
@@ -19,15 +24,15 @@ namespace Saper
 
         bool m_suppressNotifications;
 
-        public ViewModel(int cols, int rows, int bombs)
+        public ViewModel()
         {
-            Field = new BombField(cols, rows);
-            Field.PlaceBombs(bombs);
+            Field = new BombField(Cols, Rows);
 
-            FieldImage = BitmapFactory.New((int)(cols * CellSize.Width), (int)(rows * CellSize.Height));
+            FieldImage = BitmapFactory.New((int)(Cols * CellSize.Width), (int)(Rows * CellSize.Height));
 
             Rules = new Rules(Field);
             Rules.CellChanged += Rules_CellChanged;
+            Rules.GameStarted += Rules_GameStarted;
             
             drawAllCells();
         }
@@ -120,6 +125,11 @@ namespace Saper
         private void Rules_CellChanged(object sender, CellChangedEventArgs arg)
         {
             DrawCell(arg.x, arg.y);
+        }
+
+        private void Rules_GameStarted(object sender, EventArgs e)
+        {
+            drawAllCells();
         }
     }
 }

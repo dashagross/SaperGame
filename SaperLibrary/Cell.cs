@@ -35,6 +35,15 @@ namespace SaperLibrary
 
         public bool IncorrectFlag { get; set; }
 
+        public void Reset()
+        {
+            m_bombsInNeighbourhood = 0;
+            ContainsBomb = false;
+            IsOpen = false;
+            IsFlagged = false;
+            IncorrectFlag = false;
+        }
+
         public override string ToString()
         {
             return ContainsBomb ? "X" : BombsInNeighbourhood.ToString();

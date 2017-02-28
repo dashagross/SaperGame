@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
         
-        Title="Saper" Height="475" Width="740">
+        Title="Saper" Height="475" Width="740"
+        Loaded="Window_Loaded">
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -42,7 +43,8 @@
                          Background="LightGray"/>
             </StackPanel>
 
-            <Button Grid.Column="1" Margin="5" Width="40" BorderThickness="0">
+            <Button Grid.Column="1" Margin="5" Width="40" BorderThickness="0"
+                    Click="Button_Click">
                 <Image Source="D:\repos\ISync.png"/>
             </Button>
 

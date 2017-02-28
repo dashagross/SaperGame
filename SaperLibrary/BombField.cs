@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -36,39 +37,33 @@ namespace SaperLibrary
 
         public void PlaceBombs(int count)
         {
-            var bombArray = new int[count];
+            var bombSet = new HashSet<int>();
             var r = new Random();
             var w = Width;
             var h = Height;
 
-            for (int k = 0; k < count; k++)
+            foreach (var cell in m_cells)
+                cell.Reset();
+
+            do
             {
-                bombArray[k] = r.Next(w * h);
-                if (bombArray.Take(k).Contains(bombArray[k]))
-                    --k;
-                else
-                    m_cells[bombArray[k] % w, bombArray[k] / w].ContainsBomb = true;
+                int k = r.Next(w * h);
+                if (bombSet.Add(k))
+                    placeBomb(k % w, k / w);
             }
-
-            fill();
+            while (bombSet.Count < count);
         }
 
-        void fill()
+        void placeBomb(int i, int j)
         {
-            for (int i = 0; i < m_cells.GetLength(0); i++)
-                for (int j = 0; j < m_cells.GetLength(1); j++)
-                    fillCell(i, j);
-        }
-
-        void fillCell(int i, int j)
-        {
-            if (m_cells[i, j].ContainsBomb)
-                PerformWithNeighbourhood(countCell, i, j);
+            m_cells[i, j].ContainsBomb = true;
+            PerformWithNeighbourhood(countCell, i, j);
         }
 
         void countCell(int x, int y)
         {
-            if (!m_cells[x, y].ContainsBomb) ++m_cells[x, y].BombsInNeighbourhood;
+            if (!m_cells[x, y].ContainsBomb)
+                ++m_cells[x, y].BombsInNeighbourhood;
         }
         
         public void PerformWithNeighbourhood(NeighbourhoodAction callback, int i, int j)
