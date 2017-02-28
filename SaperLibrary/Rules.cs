@@ -18,6 +18,7 @@ namespace SaperLibrary
         {
             openCellImpl(x, y);
             openSafeZone(x, y);
+            gameover(x, y);
         }
 
         public void ToggleFlag(int x, int y)
@@ -59,6 +60,22 @@ namespace SaperLibrary
                 openCellImpl(x, y);
                 openSafeZone(x, y);
             }
+        }
+
+        void gameover(int x, int y)
+        {
+            if (!m_field[x, y].IsFlagged)
+                if (m_field[x, y].ContainsBomb)
+                    for (int i = 0; i < m_field.Width; ++i)
+                        for (int j = 0; j < m_field.Height; ++j)
+                        {
+                            if (m_field[i, j].IsFlagged && !m_field[i,j].ContainsBomb)
+                            {
+                                m_field[i, j].IncorrectFlag = true;
+                                raiseCellChanged(i, j);
+                            }
+                            openCellImpl(i, j);
+                        }
         }
 
         public event EventHandler<CellChangedEventArgs> CellChanged;

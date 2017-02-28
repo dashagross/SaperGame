@@ -33,6 +33,8 @@ namespace SaperLibrary
 
         public bool IsFlagged { get; set; }
 
+        public bool IncorrectFlag { get; set; }
+
         public override string ToString()
         {
             return ContainsBomb ? "X" : BombsInNeighbourhood.ToString();

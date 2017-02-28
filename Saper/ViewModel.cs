@@ -60,7 +60,9 @@ namespace Saper
 
             if (!cell.IsOpen)
             {
-                if (cell.IsFlagged)
+                if (cell.IncorrectFlag)
+                    e = CellContentsEnum.IncorrectFlag;
+                else if (cell.IsFlagged)
                     e = CellContentsEnum.Flag;
                 else
                     e = CellContentsEnum.Closed;
