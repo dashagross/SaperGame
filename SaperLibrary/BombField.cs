@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using cellAreaTuple = System.Tuple<int, int, int, int>;
+using CellAreaTuple = System.Tuple<int, int, int, int>;
 
 namespace SaperLibrary
 {
@@ -13,10 +13,10 @@ namespace SaperLibrary
     {
         #region Cell access
 
-        public int Width { get { return m_cells.GetLength(0); } }
-        public int Height { get { return m_cells.GetLength(1); } }
+        public int Width => m_cells.GetLength(0);
+        public int Height => m_cells.GetLength(1);
 
-        public Cell this[int col, int row] { get { return m_cells[col, row]; } }
+        public Cell this[int col, int row] => m_cells[col, row];
 
         #endregion
 
@@ -70,34 +70,34 @@ namespace SaperLibrary
         {
             bool isLastLine = (j == m_cells.GetLength(1) - 1);
 
-            cellAreaTuple cellArea;
+            CellAreaTuple cellArea;
             
             if (i == 0)
             {
                 if (j == 0)
-                    cellArea = new cellAreaTuple(0, 1, 0, 1);         // left top corner
+                    cellArea = new CellAreaTuple(0, 1, 0, 1);         // left top corner
                 else if (isLastLine)
-                    cellArea = new cellAreaTuple(0, 1, j - 1, j);     // left down corner
+                    cellArea = new CellAreaTuple(0, 1, j - 1, j);     // left down corner
                 else
-                    cellArea = new cellAreaTuple(0, 1, j - 1, j + 1); // left wall
+                    cellArea = new CellAreaTuple(0, 1, j - 1, j + 1); // left wall
             }
             else if (i == m_cells.GetLength(0) - 1)
             {
                 if (j == 0)
-                    cellArea = new cellAreaTuple(i - 1, i, 0, 1);         // right top corner
+                    cellArea = new CellAreaTuple(i - 1, i, 0, 1);         // right top corner
                 else if (isLastLine)
-                    cellArea = new cellAreaTuple(i - 1, i, j - 1, j);     // right down corner
+                    cellArea = new CellAreaTuple(i - 1, i, j - 1, j);     // right down corner
                 else
-                    cellArea = new cellAreaTuple(i - 1, i, j - 1, j + 1); // right wall
+                    cellArea = new CellAreaTuple(i - 1, i, j - 1, j + 1); // right wall
             }
             else
             {
                 if (j == 0)
-                    cellArea = new cellAreaTuple(i - 1, i + 1, 0, 1);         // top wall
+                    cellArea = new CellAreaTuple(i - 1, i + 1, 0, 1);         // top wall
                 else if (isLastLine)
-                    cellArea = new cellAreaTuple(i - 1, i + 1, j - 1, j);     // down wall
+                    cellArea = new CellAreaTuple(i - 1, i + 1, j - 1, j);     // down wall
                 else
-                    cellArea = new cellAreaTuple(i - 1, i + 1, j - 1, j + 1); // center
+                    cellArea = new CellAreaTuple(i - 1, i + 1, j - 1, j + 1); // center
             }
 
             for (int x = cellArea.Item1; x <= cellArea.Item2; ++x)

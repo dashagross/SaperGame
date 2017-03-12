@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Saper"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <local:RadioButtonCheckedConverter x:Key="RBC_Converter"/>
     </Application.Resources>
 </Application>

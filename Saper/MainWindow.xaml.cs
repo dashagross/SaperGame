@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 using System.Windows.Input;
 
@@ -10,7 +11,7 @@ namespace Saper
 
         public MainWindow()
         {
-            ViewModel = new ViewModel(); 
+            ViewModel = new ViewModel();
 
             InitializeComponent();
         }
@@ -41,14 +42,20 @@ namespace Saper
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void New_Game(object sender, RoutedEventArgs e)
         {
-            ViewModel.Rules.Start(ViewModel.Bombs);
+            ViewModel.Start();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Settings_Button(object sender, RoutedEventArgs e)
         {
-            ViewModel.Rules.Start(ViewModel.Bombs);
+            var settings = new Settings(ViewModel.Difficulty);
+            bool? result = settings.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                ViewModel.Difficulty = settings.Difficulty;
+            }
+               
         }
     }
 }

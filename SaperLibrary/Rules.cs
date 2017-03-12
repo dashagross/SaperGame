@@ -8,8 +8,8 @@ namespace SaperLibrary
     public class Rules
     {
         BombField m_field;
-
-        public Rules(BombField field)
+        
+        public void SetField(BombField field)
         {
             m_field = field;
         }
@@ -70,18 +70,17 @@ namespace SaperLibrary
 
         void gameover(int x, int y)
         {
-            if (!m_field[x, y].IsFlagged)
-                if (m_field[x, y].ContainsBomb)
-                    for (int i = 0; i < m_field.Width; ++i)
-                        for (int j = 0; j < m_field.Height; ++j)
+            if (!m_field[x, y].IsFlagged && m_field[x, y].ContainsBomb)
+                for (int i = 0; i < m_field.Width; ++i)
+                    for (int j = 0; j < m_field.Height; ++j)
+                    {
+                        if (m_field[i, j].IsFlagged && !m_field[i, j].ContainsBomb)
                         {
-                            if (m_field[i, j].IsFlagged && !m_field[i,j].ContainsBomb)
-                            {
-                                m_field[i, j].IncorrectFlag = true;
-                                raiseCellChanged(i, j);
-                            }
-                            openCellImpl(i, j);
+                            m_field[i, j].IncorrectFlag = true;
+                            raiseCellChanged(i, j);
                         }
+                        openCellImpl(i, j);
+                    }
         }
 
         public event EventHandler<CellChangedEventArgs> CellChanged;

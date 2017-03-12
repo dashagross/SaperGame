@@ -7,18 +7,17 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using DifficultyTuple = System.Tuple<int, int, int>;
+
 namespace Saper
 {
     public class ViewModel : INotifyPropertyChanged
-    {
+    {      
+        public Difficulty Difficulty { get; set; }
+   
+        public BombField Field { get; protected set; }
 
-        public int Cols { get; set; } = 30;
-        public int Rows { get; set; } = 16;
-        public int Bombs { get; set; } = 99;
-
-        public BombField Field { get; }
-
-        public WriteableBitmap FieldImage { get; }
+        public WriteableBitmap FieldImage { get; protected set; }
 
         public Rules Rules { get; }
 
@@ -26,22 +25,34 @@ namespace Saper
 
         public ViewModel()
         {
-            Field = new BombField(Cols, Rows);
-
-            FieldImage = BitmapFactory.New((int)(Cols * CellSize.Width), (int)(Rows * CellSize.Height));
-
-            Rules = new Rules(Field);
+            Difficulty = Difficulty.Amateur;
+              
+            Rules = new Rules();
             Rules.CellChanged += Rules_CellChanged;
             Rules.GameStarted += Rules_GameStarted;
-            
+
+            Start();
+
             drawAllCells();
+        }
+
+        public void Start()
+        {
+            int cols = difficultyDictionary[Difficulty].Item1;
+            int rows = difficultyDictionary[Difficulty].Item2;
+            int bombs = difficultyDictionary[Difficulty].Item3;
+            
+            Field = new BombField(cols, rows);
+            FieldImage = BitmapFactory.New((int)(cols * CellSize.Width), (int)(rows * CellSize.Height));
+            Rules.SetField(Field);
+            Rules.Start(bombs);
         }
 
         void blitSprite(int x, int y, CellContentsEnum e)
         {
             FieldImage.Blit(new Point(x * CellSize.Width, y * CellSize.Height),
                               m_skinBitmap,
-                              new Rect(m_imagesDictionary[e], CellSize),
+                              new Rect(spriteDictionary[e], CellSize),
                               Colors.White, WriteableBitmapExtensions.BlendMode.None);
         }
 
@@ -101,7 +112,7 @@ namespace Saper
         public Size CellSize { get; } = new Size(24, 24);
         WriteableBitmap m_skinBitmap = BitmapFactory.New(0, 0).FromResource("Images\\CellSprites.png");
 
-        Dictionary<CellContentsEnum, Point> m_imagesDictionary = new Dictionary<CellContentsEnum, Point>()
+        Dictionary<CellContentsEnum, Point> spriteDictionary = new Dictionary<CellContentsEnum, Point>()
         {
             { CellContentsEnum.Closed, new Point(0, 0)  },
             { CellContentsEnum.Flag,   new Point(24, 0) },
@@ -119,6 +130,13 @@ namespace Saper
         };
 
         #endregion
+
+        Dictionary<Difficulty, DifficultyTuple> difficultyDictionary = new Dictionary<Difficulty, DifficultyTuple>()
+        {
+            { Difficulty.Beginner,     new DifficultyTuple (9, 9, 10)   },
+            { Difficulty.Amateur,      new DifficultyTuple (16, 16, 40) },
+            { Difficulty.Professional, new DifficultyTuple (30, 16, 99) }
+        };
 
         public event PropertyChangedEventHandler PropertyChanged;
 

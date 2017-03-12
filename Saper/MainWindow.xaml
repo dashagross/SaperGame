@@ -8,11 +8,10 @@
         DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
         
         Title="Saper" Height="475" Width="740"
-        Loaded="Window_Loaded">
+        Loaded="New_Game">
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
-            
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -41,10 +40,11 @@
                 <TextBox Margin="5, 0" Text="99" TextAlignment="Center" VerticalContentAlignment="Center"
                          Width="50" Height="40" VerticalAlignment="Center"
                          Background="LightGray"/>
+                <Button Margin="5" Content="Settings" Click="Settings_Button"></Button>
             </StackPanel>
 
             <Button Grid.Column="1" Margin="5" Width="40" BorderThickness="0"
-                    Click="Button_Click">
+                    Click="New_Game">
                 <Image Source="D:\repos\ISync.png"/>
             </Button>
 
