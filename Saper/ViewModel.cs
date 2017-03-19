@@ -12,30 +12,38 @@ using DifficultyTuple = System.Tuple<int, int, int>;
 namespace Saper
 {
     public class ViewModel : INotifyPropertyChanged
-    {      
+    {  
         public Difficulty Difficulty { get; set; }
    
         public BombField Field { get; protected set; }
 
         public WriteableBitmap FieldImage { get; protected set; }
 
-        public Rules Rules { get; }
+        public Stopwatch m_stopwatch { get; set; }
+        public TimeSpan Elapsed { get => m_stopwatch.Elapsed; }
+
+        Rules m_rules { get; }
 
         bool m_suppressNotifications;
 
         public ViewModel()
         {
-            Difficulty = Difficulty.Amateur;
+            Difficulty = Difficulty.Beginner;
+
+            m_stopwatch = new Stopwatch();
+            m_stopwatch.IntervalElapsed += Stopwatch_IntervalElapsed;   
               
-            Rules = new Rules();
-            Rules.CellChanged += Rules_CellChanged;
-            Rules.GameStarted += Rules_GameStarted;
+            m_rules = new Rules();
+            m_rules.CellChanged += rules_CellChanged;
+            m_rules.GameStarted += rules_GameStarted;
+            m_rules.GameEnded += rules_GameEnded;
 
             Start();
 
             drawAllCells();
         }
 
+        
         public void Start()
         {
             int cols = difficultyDictionary[Difficulty].Item1;
@@ -44,9 +52,29 @@ namespace Saper
             
             Field = new BombField(cols, rows);
             FieldImage = BitmapFactory.New((int)(cols * CellSize.Width), (int)(rows * CellSize.Height));
-            Rules.SetField(Field);
-            Rules.Start(bombs);
+            m_rules.SetField(Field);
+            m_rules.Start(bombs);
         }
+
+        #region Wrapped rules
+
+        public void OpenCell(int x, int y)
+        {
+            m_rules.OpenCell(x, y);
+            m_stopwatch.Start();            
+        }
+
+        public void ToggleFlag(int x, int y)
+        {
+            m_rules.ToggleFlag(x, y);
+        }
+
+        public void OpenCellArea(int x, int y)
+        {
+            m_rules.OpenCellArea(x, y);
+        }
+                
+        #endregion
 
         void blitSprite(int x, int y, CellContentsEnum e)
         {
@@ -140,15 +168,37 @@ namespace Saper
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void Rules_CellChanged(object sender, CellChangedEventArgs arg)
+        private void rules_CellChanged(object sender, CellChangedEventArgs arg)
         {
             DrawCell(arg.x, arg.y);
         }
 
-        private void Rules_GameStarted(object sender, EventArgs e)
+        private void rules_GameStarted(object sender, EventArgs e)
         {
             drawAllCells();
         }
+
+        private void rules_GameEnded(object sender, GameEndedEventArgs arg)
+        {
+            m_stopwatch.Stop();
+            switch (arg.e)
+            {
+                case GameEndStates.Win:
+                    var scores = new Scores();
+                    bool? scores_result = scores.ShowDialog();
+                    break;
+                case GameEndStates.Lose:
+                    var gameOver = new GameOver();
+                    bool? gameOver_result = gameOver.ShowDialog();
+                    break;
+            }           
+        }
+
+        private void Stopwatch_IntervalElapsed(object sender, EventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Elapsed"));
+        }
+       
     }
 }
 

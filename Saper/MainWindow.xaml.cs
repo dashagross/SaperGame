@@ -25,15 +25,15 @@ namespace Saper
             switch (e.ChangedButton)
             {
                 case MouseButton.Left:
-                    ViewModel.Rules.OpenCell(x, y);                    
+                    ViewModel.OpenCell(x, y);                    
                     break;
 
                 case MouseButton.Right:
-                    ViewModel.Rules.ToggleFlag(x, y);
+                    ViewModel.ToggleFlag(x, y);
                     break;
 
                 case MouseButton.Middle:
-                    ViewModel.Rules.OpenCellArea(x, y);
+                    ViewModel.OpenCellArea(x, y);
                     break;
 
                 default:

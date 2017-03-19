@@ -1,13 +1,12 @@
 ﻿using System;
 
-
 namespace SaperLibrary
 {
-    //public delegate void CellChangedEventHandler(object sender, CellChangedEventArgs arg);
-
     public class Rules
     {
         BombField m_field;
+
+        int m_openCellCount;
         
         public void SetField(BombField field)
         {
@@ -17,6 +16,7 @@ namespace SaperLibrary
         public void Start(int bombs)
         {
             m_field.PlaceBombs(bombs);
+            m_openCellCount = 0;
             raiseGameStarted();
         }
 
@@ -24,7 +24,7 @@ namespace SaperLibrary
         {
             openCellImpl(x, y);
             openSafeZone(x, y);
-            gameover(x, y);
+            //checkGameOver(x, y);
         }
 
         public void ToggleFlag(int x, int y)
@@ -46,9 +46,10 @@ namespace SaperLibrary
 
         void openCellImpl(int x, int y)
         {
-            if (!m_field[x, y].IsFlagged)
+            if (!m_field[x, y].IsFlagged && !m_field[x, y].IsOpen)
             {
                 m_field[x, y].IsOpen = true;
+                m_openCellCount++;
                 raiseCellChanged(x, y);
             }
         }
@@ -68,33 +69,51 @@ namespace SaperLibrary
             }
         }
 
-        void gameover(int x, int y)
+        void checkGameOver(int x, int y)
         {
             if (!m_field[x, y].IsFlagged && m_field[x, y].ContainsBomb)
-                for (int i = 0; i < m_field.Width; ++i)
-                    for (int j = 0; j < m_field.Height; ++j)
+                loseGame();
+
+            if (m_openCellCount == (m_field.Height * m_field.Width - m_field.Bombs))
+                winGame();
+        }
+
+        void loseGame()
+        {
+            for (int i = 0; i < m_field.Width; ++i)
+                for (int j = 0; j < m_field.Height; ++j)
+                {
+                    if (m_field[i, j].IsFlagged && !m_field[i, j].ContainsBomb)
                     {
-                        if (m_field[i, j].IsFlagged && !m_field[i, j].ContainsBomb)
-                        {
-                            m_field[i, j].IncorrectFlag = true;
-                            raiseCellChanged(i, j);
-                        }
-                        openCellImpl(i, j);
+                        m_field[i, j].IncorrectFlag = true;
+                        raiseCellChanged(i, j);
                     }
+                    openCellImpl(i, j);
+                }
+            raiseGameEnded(GameEndStates.Lose);
+        }
+
+        void winGame()
+        {
+            raiseGameEnded(GameEndStates.Win);
         }
 
         public event EventHandler<CellChangedEventArgs> CellChanged;
-
         protected void raiseCellChanged(int x, int y)
         {
             CellChanged?.Invoke(this, new CellChangedEventArgs(x, y));
         }
 
         public event EventHandler GameStarted;
-
         protected void raiseGameStarted()
         {
             GameStarted?.Invoke(this, null);
         }
+
+        public event EventHandler<GameEndedEventArgs> GameEnded;
+        protected void raiseGameEnded(GameEndStates e)
+        {
+            GameEnded?.Invoke(this, new GameEndedEventArgs(e));
+        }        
     }
 }

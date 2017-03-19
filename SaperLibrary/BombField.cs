@@ -16,6 +16,13 @@ namespace SaperLibrary
         public int Width => m_cells.GetLength(0);
         public int Height => m_cells.GetLength(1);
 
+        int m_bombs;
+        public int Bombs
+        {
+            get => m_bombs;
+            set => m_bombs = value;
+        }
+
         public Cell this[int col, int row] => m_cells[col, row];
 
         #endregion
@@ -58,6 +65,7 @@ namespace SaperLibrary
         {
             m_cells[i, j].ContainsBomb = true;
             PerformWithNeighbourhood(countCell, i, j);
+            m_bombs++;
         }
 
         void countCell(int x, int y)
