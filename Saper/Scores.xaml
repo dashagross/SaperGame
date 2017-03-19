@@ -6,14 +6,11 @@
         xmlns:local="clr-namespace:Saper"
         mc:Ignorable="d"
         Title="Scores" Height="300" Width="300"
-        DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top">
-            <TextBlock Margin="20" Text="{Binding Elapsed, Mode=OneWay, StringFormat='You win! Your time is: {0}'}"></TextBlock>
-            <ComboBox  Margin="20"></ComboBox>
-        </StackPanel>
-        <Grid></Grid>
+        <TextBlock DockPanel.Dock="Top" 
+            Margin="20" Text="{Binding Elapsed, StringFormat='You won! Your time is: {0:m\\:ss}'}"/>
         <Grid DockPanel.Dock="Bottom"
               Margin="10"  VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>

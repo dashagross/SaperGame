@@ -28,7 +28,7 @@ namespace Saper
 
         public ViewModel()
         {
-            Difficulty = Difficulty.Beginner;
+            Difficulty = Difficulty.Amateur;
 
             m_stopwatch = new Stopwatch();
             m_stopwatch.IntervalElapsed += Stopwatch_IntervalElapsed;   
@@ -184,7 +184,7 @@ namespace Saper
             switch (arg.e)
             {
                 case GameEndStates.Win:
-                    var scores = new Scores();
+                    var scores = new Scores(Elapsed);
                     bool? scores_result = scores.ShowDialog();
                     break;
                 case GameEndStates.Lose:

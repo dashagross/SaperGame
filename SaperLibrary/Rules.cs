@@ -24,7 +24,7 @@ namespace SaperLibrary
         {
             openCellImpl(x, y);
             openSafeZone(x, y);
-            //checkGameOver(x, y);
+            checkGameOver(x, y);
         }
 
         public void ToggleFlag(int x, int y)

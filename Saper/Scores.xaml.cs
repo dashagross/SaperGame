@@ -19,14 +19,16 @@ namespace Saper
     /// </summary>
     public partial class Scores : Window
     {
-        public Scores()
+        public TimeSpan Elapsed { get; }
+
+        public Scores(TimeSpan ts)
         {
+            Elapsed = ts;
             InitializeComponent();
         }
 
         private void OK_Button(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
             Close();
         }
     }
