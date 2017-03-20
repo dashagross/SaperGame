@@ -54,8 +54,7 @@ namespace Saper
             if (result.HasValue && result.Value)
             {
                 ViewModel.Difficulty = settings.Difficulty;
-            }
-               
+            }               
         }
     }
 }

@@ -8,7 +8,7 @@
         Title="GameOver" Height="150" Width="300">
 
     <StackPanel>
-        <TextBlock Text="You lose! Sorry."
+        <TextBlock Text="You lost! Sorry."
                    Margin="20"/>
         <Grid Margin="10"  VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>

@@ -132,7 +132,11 @@
       <Name>SaperLibrary</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="images\WindowIconBomb.png" />
+    <Resource Include="images\WindowIconNewGame.png" />
+    <Resource Include="images\WindowIconStopwatch.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="images\CellSprites.png" />
   </ItemGroup>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Saper"
         mc:Ignorable="d"
-        Title="Settings" Height="300" Width="300"
+        Title="Settings" Height="220" Width="300"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <DockPanel>
@@ -26,7 +26,7 @@
         </StackPanel>
         
         <Grid DockPanel.Dock="Bottom"
-              Margin="10"  VerticalAlignment="Bottom">
+              Margin="10"  VerticalAlignment="Bottom" RenderTransformOrigin="0.485,-0.675">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Saper"
         mc:Ignorable="d"
         DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
         
@@ -29,39 +28,45 @@
     </Window.Resources>
 
     <StackPanel>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Margin="5" Orientation="Horizontal">
-                <Image Source="D:\repos\gnome-mines.png" Height="40"/>
-                <TextBox Margin="5, 0" Text="99" TextAlignment="Center" VerticalContentAlignment="Center"
-                         Width="50" Height="40" VerticalAlignment="Center"
-                         Background="LightGray"/>
-                <Button Margin="5" Content="Settings" Click="Settings_Button"></Button>
-            </StackPanel>
+        <Menu Background="White">
+            <MenuItem Header="_Settings" Click="Settings_Button"/>
+            <MenuItem Header="Sco_res"/>            
+        </Menu>
+        
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="1" Margin="5" Width="40" BorderThickness="0"
+                <StackPanel Grid.Column="0" Margin="5" Orientation="Horizontal">
+                    <Image Source="/images/WindowIconBomb.png" Width="30"/>
+                    <TextBox Margin="5, 0" Text="99" TextAlignment="Center" VerticalContentAlignment="Center"
+                         Width="40" Height="30" VerticalAlignment="Center"
+                         Background="LightGray"/>                    
+                </StackPanel>
+
+                <Button Grid.Column="1" Margin="5"  BorderThickness="0"
                     Click="New_Game">
-                <Image Source="D:\repos\ISync.png"/>
-            </Button>
+                    <Image Source="/images/WindowIconNewGame.png" Width="30"/>
+                </Button>
 
-            <StackPanel Grid.Column="2" Margin="5" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Image Source="D:\repos\Machine.png" Height="40"/>
-                <TextBox Text="{Binding Elapsed, Mode=OneWay}"
+                <StackPanel Grid.Column="2" Margin="5" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBox Text="{Binding Elapsed, StringFormat={}{0:m\\:ss}, Mode=OneWay}"
                     Margin="5, 0" TextAlignment="Center" VerticalContentAlignment="Center"
-                    Width="50" Height="40" VerticalAlignment="Center"
+                    Width="40" Height="30" VerticalAlignment="Center"
                     Background="LightGray"/>
-            </StackPanel>
-
-        </Grid>
-
-        <Image Source="{Binding FieldImage}" Stretch="None"
+                    <Image Source="/images/WindowIconStopwatch.png" Width="30"/>
+                </StackPanel>
+            </Grid>
+            
+            <Image Source="{Binding FieldImage}" Stretch="None" Margin="5"
                MouseDown="Image_MouseDown"/>
-
+            
+        </StackPanel>
     </StackPanel>
 
 </Window>
