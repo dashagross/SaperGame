@@ -64,7 +64,7 @@ namespace SaperLibrary
         void placeBomb(int i, int j)
         {
             m_cells[i, j].ContainsBomb = true;
-            PerformWithNeighbourhood(countCell, i, j);
+            PerformWithNeighbours(countCell, i, j);
             m_bombs++;
         }
 
@@ -74,7 +74,7 @@ namespace SaperLibrary
                 ++m_cells[x, y].BombsInNeighbourhood;
         }
         
-        public void PerformWithNeighbourhood(NeighbourhoodAction callback, int i, int j)
+        public void PerformWithNeighbours(NeighbourhoodAction callback, int i, int j)
         {
             bool isLastLine = (j == m_cells.GetLength(1) - 1);
 

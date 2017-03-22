@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace Saper
 {
     public class Stopwatch
     {
-        int m_elapsed;
-        public TimeSpan Elapsed { get => TimeSpan.FromSeconds(m_elapsed); }
+        DispatcherTimer m_dispatcherTimer;
 
-        DispatcherTimer m_dispatcherTimer { get; set; }
+        int m_elapsed;
+        public TimeSpan Elapsed => TimeSpan.FromSeconds(m_elapsed);
+
+        public bool IsEnabled => m_dispatcherTimer.IsEnabled;
 
         public Stopwatch()
         {
@@ -23,7 +21,11 @@ namespace Saper
 
         public void Start()
         {
-            if (!m_dispatcherTimer.IsEnabled) m_dispatcherTimer.Start();
+            if (!m_dispatcherTimer.IsEnabled)
+            {
+                m_elapsed = 0;
+                m_dispatcherTimer.Start();
+            }
         }
 
         public void Stop()

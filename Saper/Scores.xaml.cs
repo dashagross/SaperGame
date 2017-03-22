@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace Saper
 {
-    /// <summary>
-    /// Interaction logic for Scores.xaml
-    /// </summary>
     public partial class Scores : Window
     {
         public TimeSpan Elapsed { get; }

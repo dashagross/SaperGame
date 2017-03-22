@@ -20,7 +20,7 @@ namespace Saper
         public WriteableBitmap FieldImage { get; protected set; }
 
         public Stopwatch m_stopwatch { get; set; }
-        public TimeSpan Elapsed { get => m_stopwatch.Elapsed; }
+        public TimeSpan Elapsed { get => m_stopwatch.IsEnabled ? m_stopwatch.Elapsed : new TimeSpan(); }
 
         Rules m_rules { get; }
 
@@ -39,8 +39,6 @@ namespace Saper
             m_rules.GameEnded += rules_GameEnded;
 
             Start();
-
-            drawAllCells();
         }
 
         
@@ -52,6 +50,8 @@ namespace Saper
             
             Field = new BombField(cols, rows);
             FieldImage = BitmapFactory.New((int)(cols * CellSize.Width), (int)(rows * CellSize.Height));
+
+            m_stopwatch.Stop();
             m_rules.SetField(Field);
             m_rules.Start(bombs);
         }
@@ -60,8 +60,8 @@ namespace Saper
 
         public void OpenCell(int x, int y)
         {
+            m_stopwatch.Start();
             m_rules.OpenCell(x, y);
-            m_stopwatch.Start();            
         }
 
         public void ToggleFlag(int x, int y)
@@ -71,7 +71,7 @@ namespace Saper
 
         public void OpenCellArea(int x, int y)
         {
-            m_rules.OpenCellArea(x, y);
+            m_rules.OpenCellNeighbours(x, y);
         }
                 
         #endregion
@@ -175,6 +175,7 @@ namespace Saper
 
         private void rules_GameStarted(object sender, EventArgs e)
         {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Elapsed)));
             drawAllCells();
         }
 
@@ -186,17 +187,23 @@ namespace Saper
                 case GameEndStates.Win:
                     var scores = new Scores(Elapsed);
                     bool? scores_result = scores.ShowDialog();
+                    RefreshRating();
                     break;
                 case GameEndStates.Lose:
                     var gameOver = new GameOver();
                     bool? gameOver_result = gameOver.ShowDialog();
                     break;
-            }           
+            } 
+        }
+
+        private void RefreshRating()
+        {
+            
         }
 
         private void Stopwatch_IntervalElapsed(object sender, EventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Elapsed"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Elapsed)));
         }
        
     }

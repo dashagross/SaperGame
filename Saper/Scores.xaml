@@ -10,6 +10,9 @@
     <DockPanel>
         <TextBlock DockPanel.Dock="Top" 
             Margin="20" Text="{Binding Elapsed, StringFormat='You won! Your time is: {0:m\\:ss}'}"/>
+        <ListView>
+            
+        </ListView>
         <Grid DockPanel.Dock="Bottom"
               Margin="10"  VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>

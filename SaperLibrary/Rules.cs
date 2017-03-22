@@ -22,9 +22,16 @@ namespace SaperLibrary
 
         public void OpenCell(int x, int y)
         {
-            openCellImpl(x, y);
-            openSafeZone(x, y);
-            checkGameOver(x, y);
+            if (!m_field[x, y].IsFlagged && !m_field[x, y].IsOpen)
+            {
+                m_field[x, y].IsOpen = true;
+                m_openCellCount++;
+
+                raiseCellChanged(x, y);
+
+                if (!isGameOver(x, y))
+                    openSafeZone(x, y);
+            }
         }
 
         public void ToggleFlag(int x, int y)
@@ -33,49 +40,38 @@ namespace SaperLibrary
             raiseCellChanged(x, y);
         }
 
-        public void OpenCellArea(int x, int y)
+        public void OpenCellNeighbours(int x, int y)
         {
             if (m_field[x, y].IsOpen)
             {
                 int count = 0;
-                m_field.PerformWithNeighbourhood((u, v) => { if (m_field[u, v].IsFlagged) ++count; }, x, y);
+                m_field.PerformWithNeighbours((u, v) => { if (m_field[u, v].IsFlagged) ++count; }, x, y);
                 if (count >= m_field[x, y].BombsInNeighbourhood)
-                    m_field.PerformWithNeighbourhood(OpenCell, x, y);
-            }
-        }
-
-        void openCellImpl(int x, int y)
-        {
-            if (!m_field[x, y].IsFlagged && !m_field[x, y].IsOpen)
-            {
-                m_field[x, y].IsOpen = true;
-                m_openCellCount++;
-                raiseCellChanged(x, y);
+                    m_field.PerformWithNeighbours(OpenCell, x, y);
             }
         }
 
         void openSafeZone(int x, int y)
         {
             if (!m_field[x, y].ContainsBomb && m_field[x, y].BombsInNeighbourhood == 0)
-                m_field.PerformWithNeighbourhood(openSafeZoneImpl, x, y);
+                m_field.PerformWithNeighbours(OpenCell, x, y);
         }
 
-        void openSafeZoneImpl(int x, int y)
-        {
-            if (!m_field[x, y].IsOpen && !m_field[x, y].IsFlagged)
-            {
-                openCellImpl(x, y);
-                openSafeZone(x, y);
-            }
-        }
-
-        void checkGameOver(int x, int y)
+        bool isGameOver(int x, int y)
         {
             if (!m_field[x, y].IsFlagged && m_field[x, y].ContainsBomb)
+            {
                 loseGame();
+                return true;
+            }
 
             if (m_openCellCount == (m_field.Height * m_field.Width - m_field.Bombs))
+            {
                 winGame();
+                return true;
+            }
+
+            return false;
         }
 
         void loseGame()
@@ -83,12 +79,11 @@ namespace SaperLibrary
             for (int i = 0; i < m_field.Width; ++i)
                 for (int j = 0; j < m_field.Height; ++j)
                 {
-                    if (m_field[i, j].IsFlagged && !m_field[i, j].ContainsBomb)
-                    {
+                    if (m_field[i, j].IsFlagged && !m_field[i, j].ContainsBomb)                    
                         m_field[i, j].IncorrectFlag = true;
-                        raiseCellChanged(i, j);
-                    }
-                    openCellImpl(i, j);
+                    
+                    m_field[i, j].IsOpen = true;
+                    raiseCellChanged(i, j);
                 }
             raiseGameEnded(GameEndStates.Lose);
         }
