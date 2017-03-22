@@ -23,6 +23,7 @@ namespace Saper
         public TimeSpan Elapsed { get => m_stopwatch.IsEnabled ? m_stopwatch.Elapsed : new TimeSpan(); }
 
         Rules m_rules { get; }
+        public int FlagsRemaining => m_rules.FlagsRemaining;
 
         bool m_suppressNotifications;
 
@@ -35,13 +36,18 @@ namespace Saper
               
             m_rules = new Rules();
             m_rules.CellChanged += rules_CellChanged;
+            m_rules.FlagCountChanged += rules_FlagCountChanged;
             m_rules.GameStarted += rules_GameStarted;
             m_rules.GameEnded += rules_GameEnded;
 
             Start();
         }
 
-        
+        private void rules_FlagCountChanged(object sender, EventArgs e)
+        {
+            raisePropertyChanged(nameof(FlagsRemaining));
+        }
+
         public void Start()
         {
             int cols = difficultyDictionary[Difficulty].Item1;
@@ -94,7 +100,7 @@ namespace Saper
 
             m_suppressNotifications = false;
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FieldImage"));
+            raisePropertyChanged(nameof(FieldImage));
         }
 
         public void DrawCell(int x, int y)
@@ -132,7 +138,7 @@ namespace Saper
             blitSprite(x, y, e);
 
             if (!m_suppressNotifications)
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FieldImage"));
+                raisePropertyChanged(nameof(FieldImage));
         }
 
         #region Skin
@@ -167,6 +173,10 @@ namespace Saper
         };
 
         public event PropertyChangedEventHandler PropertyChanged;
+        protected void raisePropertyChanged([CallerMemberName] string propName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
 
         private void rules_CellChanged(object sender, CellChangedEventArgs arg)
         {
@@ -175,7 +185,7 @@ namespace Saper
 
         private void rules_GameStarted(object sender, EventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Elapsed)));
+            raisePropertyChanged(nameof(Elapsed));
             drawAllCells();
         }
 
@@ -203,7 +213,7 @@ namespace Saper
 
         private void Stopwatch_IntervalElapsed(object sender, EventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Elapsed)));
+            raisePropertyChanged(nameof(Elapsed));
         }
        
     }

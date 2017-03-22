@@ -7,6 +7,20 @@ namespace SaperLibrary
         BombField m_field;
 
         int m_openCellCount;
+
+        int m_flagsRemaining;
+        public int FlagsRemaining
+        {
+            get => m_flagsRemaining;
+            set
+            {
+                if (m_flagsRemaining == value)
+                    return;
+
+                m_flagsRemaining = value;
+                raiseFlagCountChanged();
+            }
+        }
         
         public void SetField(BombField field)
         {
@@ -15,8 +29,10 @@ namespace SaperLibrary
 
         public void Start(int bombs)
         {
-            m_field.PlaceBombs(bombs);
+            FlagsRemaining = bombs;
             m_openCellCount = 0;
+
+            m_field.PlaceBombs(bombs);
             raiseGameStarted();
         }
 
@@ -36,7 +52,16 @@ namespace SaperLibrary
 
         public void ToggleFlag(int x, int y)
         {
+            if (FlagsRemaining == 0 && !m_field[x, y].IsFlagged)
+                return;
+
             m_field[x, y].IsFlagged = !m_field[x, y].IsFlagged;
+
+            if (m_field[x, y].IsFlagged)
+                --FlagsRemaining;
+            else
+                ++FlagsRemaining;
+
             raiseCellChanged(x, y);
         }
 
@@ -109,6 +134,12 @@ namespace SaperLibrary
         protected void raiseGameEnded(GameEndStates e)
         {
             GameEnded?.Invoke(this, new GameEndedEventArgs(e));
-        }        
+        }
+
+        public event EventHandler FlagCountChanged;
+        protected void raiseFlagCountChanged()
+        {
+            FlagCountChanged?.Invoke(this, null);
+        }
     }
 }
