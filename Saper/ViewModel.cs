@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -19,12 +21,12 @@ namespace Saper
 
         public WriteableBitmap FieldImage { get; protected set; }
 
-        public Stopwatch m_stopwatch { get; set; }
         public TimeSpan Elapsed { get => m_stopwatch.IsEnabled ? m_stopwatch.Elapsed : new TimeSpan(); }
 
-        Rules m_rules { get; }
         public int FlagsRemaining => m_rules.FlagsRemaining;
 
+        Rules m_rules;
+        Stopwatch m_stopwatch;
         bool m_suppressNotifications;
 
         public ViewModel()
@@ -195,10 +197,13 @@ namespace Saper
             switch (arg.e)
             {
                 case GameEndStates.Win:
-                    var scores = new Scores(Elapsed);
-                    bool? scores_result = scores.ShowDialog();
-                    RefreshRating();
+                    var scores = ScoreProvider.LoadScores(Difficulty);
+                    addScore(scores, Elapsed);
+                    ScoreProvider.SaveScores(scores, Difficulty);
+                    var scoresDialog = new Scores(Elapsed, scores);
+                    bool? scores_result = scoresDialog.ShowDialog();
                     break;
+
                 case GameEndStates.Lose:
                     var gameOver = new GameOver();
                     bool? gameOver_result = gameOver.ShowDialog();
@@ -206,9 +211,15 @@ namespace Saper
             } 
         }
 
-        private void RefreshRating()
+        private void addScore(List<ScoreItem> scores, TimeSpan elapsed)
         {
-            
+            var bestItem = scores.Min();
+
+            if (bestItem == null || elapsed < bestItem.Score)
+            {
+                scores.Remove(bestItem);
+                scores.Add(new ScoreItem { Date = DateTime.Now, Score = elapsed });
+            }
         }
 
         private void Stopwatch_IntervalElapsed(object sender, EventArgs e)

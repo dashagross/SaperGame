@@ -65,6 +65,8 @@
       <DependentUpon>GameOver.xaml</DependentUpon>
     </Compile>
     <Compile Include="RadioButtonCheckedConverter.cs" />
+    <Compile Include="ScoresItem.cs" />
+    <Compile Include="ScoreProvider.cs" />
     <Compile Include="Scores.xaml.cs">
       <DependentUpon>Scores.xaml</DependentUpon>
     </Compile>

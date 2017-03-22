@@ -65,10 +65,10 @@
                     <Image Source="/images/WindowIconStopwatch.png" Width="30"/>
                 </StackPanel>
             </Grid>
-            
+
             <Image Source="{Binding FieldImage}" Stretch="None" Margin="5"
                MouseDown="Image_MouseDown"/>
-            
+
         </StackPanel>
     </StackPanel>
 

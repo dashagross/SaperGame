@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Saper
@@ -7,9 +8,12 @@ namespace Saper
     {
         public TimeSpan Elapsed { get; }
 
-        public Scores(TimeSpan ts)
+        public List<ScoreItem> BestScores { get; }
+
+        public Scores(TimeSpan elapsed, List<ScoreItem> bestScores)
         {
-            Elapsed = ts;
+            Elapsed = elapsed;
+            BestScores = bestScores;
             InitializeComponent();
         }
 
