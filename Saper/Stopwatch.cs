@@ -31,7 +31,7 @@ namespace Saper
         public void Stop()
         {
             m_dispatcherTimer.Stop();
-        }        
+        }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {

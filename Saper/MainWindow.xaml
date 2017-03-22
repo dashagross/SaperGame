@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         DataContext="{Binding Path=ViewModel, RelativeSource={RelativeSource Self}}"
-        
+
         Title="Saper"
         SizeToContent="WidthAndHeight"
         Loaded="New_Game">
@@ -31,9 +31,9 @@
 
         <Menu Background="White">
             <MenuItem Header="_Settings" Click="Settings_Button"/>
-            <MenuItem Header="Sco_res"/>            
+            <MenuItem Header="Sco_res"/>
         </Menu>
-        
+
         <StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -44,21 +44,24 @@
 
                 <StackPanel Grid.Column="0" Margin="5" Orientation="Horizontal">
                     <Image Source="/images/WindowIconBomb.png" Width="30"/>
-                    <TextBox Margin="5, 0" Text="99" TextAlignment="Center" VerticalContentAlignment="Center"
-                         Width="40" Height="30" VerticalAlignment="Center"
-                         Background="LightGray"/>                    
+                    <TextBox Margin="5, 0" Text="{Binding FlagsRemaining, Mode=OneWay}" 
+                             IsEnabled="False"
+                             TextAlignment="Center" VerticalContentAlignment="Center"
+                             Width="40" Height="30" VerticalAlignment="Center"
+                             Background="LightGray"/>
                 </StackPanel>
 
                 <Button Grid.Column="1" Margin="5"  BorderThickness="0"
-                    Click="New_Game">
+                        Click="New_Game">
                     <Image Source="/images/WindowIconNewGame.png" Width="30"/>
                 </Button>
 
                 <StackPanel Grid.Column="2" Margin="5" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBox Text="{Binding Elapsed, StringFormat={}{0:m\\:ss}, Mode=OneWay}"
-                    Margin="5, 0" TextAlignment="Center" VerticalContentAlignment="Center"
-                    Width="40" Height="30" VerticalAlignment="Center"
-                    Background="LightGray"/>
+                    <TextBox Margin="5, 0" Text="{Binding Elapsed, StringFormat={}{0:m\\:ss}, Mode=OneWay}"
+                             IsEnabled="False"
+                             TextAlignment="Center" VerticalContentAlignment="Center"
+                             Width="40" Height="30" VerticalAlignment="Center"
+                             Background="LightGray"/>
                     <Image Source="/images/WindowIconStopwatch.png" Width="30"/>
                 </StackPanel>
             </Grid>

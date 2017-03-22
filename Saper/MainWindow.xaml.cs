@@ -25,7 +25,7 @@ namespace Saper
             switch (e.ChangedButton)
             {
                 case MouseButton.Left:
-                    ViewModel.OpenCell(x, y);                    
+                    ViewModel.OpenCell(x, y);
                     break;
 
                 case MouseButton.Right:
@@ -54,7 +54,7 @@ namespace Saper
             if (result.HasValue && result.Value)
             {
                 ViewModel.Difficulty = settings.Difficulty;
-            }               
+            }
         }
     }
 }

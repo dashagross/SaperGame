@@ -11,7 +11,7 @@
         <TextBlock DockPanel.Dock="Top" 
             Margin="20" Text="{Binding Elapsed, StringFormat='You won! Your time is: {0:m\\:ss}'}"/>
         <ListView>
-            
+
         </ListView>
         <Grid DockPanel.Dock="Bottom"
               Margin="10"  VerticalAlignment="Bottom">
@@ -21,8 +21,8 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="1" Margin="10"
                     Content="OK"
-                    Click="OK_Button"/>            
+                    Click="OK_Button"/>
         </Grid>
     </DockPanel>
-    
+
 </Window>
