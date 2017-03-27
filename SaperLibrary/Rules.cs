@@ -55,6 +55,9 @@ namespace SaperLibrary
             if (FlagsRemaining == 0 && !m_field[x, y].IsFlagged)
                 return;
 
+            if (m_field[x, y].IsOpen)
+                return;
+
             m_field[x, y].IsFlagged = !m_field[x, y].IsFlagged;
 
             if (m_field[x, y].IsFlagged)
