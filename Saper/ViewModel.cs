@@ -198,9 +198,10 @@ namespace Saper
             {
                 case GameEndStates.Win:
                     var scores = ScoreProvider.LoadScores(Difficulty);
-                    addScore(scores, Elapsed);
+                    var elapsed = m_stopwatch.Elapsed;
+                    addScore(scores, elapsed);
                     ScoreProvider.SaveScores(scores, Difficulty);
-                    var scoresDialog = new Scores(Elapsed, scores);
+                    var scoresDialog = new Scores(elapsed, scores);
                     bool? scores_result = scoresDialog.ShowDialog();
                     break;
 
@@ -208,12 +209,12 @@ namespace Saper
                     var gameOver = new GameOver();
                     bool? gameOver_result = gameOver.ShowDialog();
                     break;
-            } 
+            }
         }
 
         private void addScore(List<ScoreItem> scores, TimeSpan elapsed)
         {
-            var bestItem = scores.Min();
+            var bestItem = (scores.Count < 10) ? null : scores.Max();
 
             if (bestItem == null || elapsed < bestItem.Score)
             {
@@ -226,7 +227,6 @@ namespace Saper
         {
             raisePropertyChanged(nameof(Elapsed));
         }
-       
     }
 }
 

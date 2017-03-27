@@ -3,24 +3,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
-        Title="Scores" Height="300" Width="300"
+        Title="Scores" Height="400" Width="300"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Window.Resources>
+        <CollectionViewSource Source="{Binding BestScores}" x:Key="BestScoresCVS">
+            <CollectionViewSource.SortDescriptions>
+                <componentmodel:SortDescription PropertyName="Score" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>        
+    </Window.Resources>
 
     <DockPanel>
         <TextBlock DockPanel.Dock="Top" Margin="20"
                    Text="{Binding Elapsed, StringFormat='You won! Your time is: {0:m\\:ss}'}"/>
 
         <DataGrid DockPanel.Dock="Top" Margin="20, 10"
-                  ItemsSource="{Binding BestScores}"
-                  AutoGenerateColumns="False" CanUserSortColumns="False"
+                  ItemsSource="{Binding Source={StaticResource BestScoresCVS}}"
+                  AutoGenerateColumns="False"
                   HeadersVisibility="Column" GridLinesVisibility="None" BorderBrush="Transparent"
-                  AlternatingRowBackground="LightGray">
+                  AlternatingRowBackground="LightGray"
+                  CanUserSortColumns="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeColumns="False"
+                  IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Score" Width="*"
-                                    Binding="{Binding Path=Score, StringFormat={}{0:m\\:ss}}"/>
+                                    Binding="{Binding Path=Score, StringFormat={}{0:m\\:ss}}"
+                                    SortDirection="Ascending"/>
                 <DataGridTextColumn Header="Date" Width="*"
-                                    Binding="{Binding Path=Date, StringFormat=d, ConverterCulture=de-DE}"/>
+                                    Binding="{Binding Path=Date, StringFormat=d}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Grid DockPanel.Dock="Bottom"

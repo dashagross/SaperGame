@@ -31,7 +31,6 @@
 
         <Menu Background="White">
             <MenuItem Header="_Settings" Click="Settings_Button"/>
-            <MenuItem Header="Sco_res"/>
         </Menu>
 
         <StackPanel>

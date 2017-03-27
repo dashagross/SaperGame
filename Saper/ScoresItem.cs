@@ -4,14 +4,15 @@ using System.Xml.Serialization;
 
 namespace Saper
 {
-    public class ScoreItem
+    public class ScoreItem : IComparable<ScoreItem>
     {
         [XmlIgnore]
         public TimeSpan Score { get; set; }
 
         public DateTime Date { get; set; }
 
-        #region operators
+
+        #region operators and icomparable
 
         static public bool operator < (ScoreItem lhs, ScoreItem rhs)
         {
@@ -21,6 +22,13 @@ namespace Saper
         static public bool operator > (ScoreItem lhs, ScoreItem rhs)
         {
             return lhs.Score > rhs.Score;
+        }
+
+        int IComparable<ScoreItem>.CompareTo(ScoreItem rhs)
+        {
+            if (this < rhs) return -1;
+            if (this > rhs) return 1;
+            return 0;
         }
 
         #endregion
