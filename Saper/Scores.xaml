@@ -11,8 +11,17 @@
         <TextBlock DockPanel.Dock="Top" Margin="20"
                    Text="{Binding Elapsed, StringFormat='You won! Your time is: {0:m\\:ss}'}"/>
 
-        <DataGrid DockPanel.Dock="Top"
-                  ItemsSource="{Binding BestScores}">
+        <DataGrid DockPanel.Dock="Top" Margin="20, 10"
+                  ItemsSource="{Binding BestScores}"
+                  AutoGenerateColumns="False" CanUserSortColumns="False"
+                  HeadersVisibility="Column" GridLinesVisibility="None" BorderBrush="Transparent"
+                  AlternatingRowBackground="LightGray">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Score" Width="*"
+                                    Binding="{Binding Path=Score, StringFormat={}{0:m\\:ss}}"/>
+                <DataGridTextColumn Header="Date" Width="*"
+                                    Binding="{Binding Path=Date, StringFormat=d, ConverterCulture=de-DE}"/>
+            </DataGrid.Columns>
         </DataGrid>
         <Grid DockPanel.Dock="Bottom"
               Margin="10"  VerticalAlignment="Bottom">
