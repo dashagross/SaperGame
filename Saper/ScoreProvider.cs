@@ -13,8 +13,11 @@ namespace Saper
             try
             {
                 var xmlSerializer = new XmlSerializer(typeof(List<ScoreItem>));
-                var reader = new StreamReader(PersistentStorageFileName(difficulty));
-                return (List<ScoreItem>)xmlSerializer.Deserialize(reader);
+                using (var reader = new StreamReader(PersistentStorageFileName(difficulty)))
+                {
+                    return (List<ScoreItem>)xmlSerializer.Deserialize(reader);
+                }
+
             }
             catch (FileNotFoundException)
             {
@@ -31,8 +34,10 @@ namespace Saper
             var filename = PersistentStorageFileName(difficulty);
 
             Directory.CreateDirectory(Path.GetDirectoryName(filename));
-            var writer = new StreamWriter(filename);
-            xmlSerializer.Serialize(writer, scores);
+            using (var writer = new StreamWriter(filename, false))
+            {
+                xmlSerializer.Serialize(writer, scores);
+            }
         }
 
         private static string PersistentStorageFileName(Difficulty difficulty)
