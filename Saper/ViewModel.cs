@@ -31,7 +31,7 @@ namespace Saper
 
         public ViewModel()
         {
-            Difficulty = Difficulty.Amateur;
+            Difficulty = Difficulty.Professional;
 
             m_stopwatch = new Stopwatch();
             m_stopwatch.IntervalElapsed += Stopwatch_IntervalElapsed;   
